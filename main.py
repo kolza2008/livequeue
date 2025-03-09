@@ -30,7 +30,6 @@ statuscodes = ["👀", "☑️", "🕘", "✅"]
 
 
 class Middleware(BaseMiddleware):
-
     async def __call__(self, handler, event, data):
         async with session() as s:
             r = await s.execute(
@@ -46,6 +45,7 @@ class NewTaskStates(StatesGroup):
     title = State()
     text = State()
 
+#class NewQur
 
 # Хэндлер на команду /start
 @dp.message(CommandStart())
@@ -225,14 +225,11 @@ async def get_task(callback: types.CallbackQuery,
 
 
 async def on_startup(bot: Bot) -> None:
-    # If you have a self-signed SSL certificate, then you will need to send a public
-    # certificate to Telegram
     await bot.set_webhook(
         f"c4819cbc-c991-488c-9f88-91cff4b405a5-00-3c8znnhrwcnov.pike.replit.dev/webhook"
     )
 
 
-# Запуск процесса поллинга новых апдейтов
 async def main():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
@@ -240,18 +237,11 @@ async def main():
     dp.message.middleware(Middleware())
     dp.startup.register(on_startup)
 
-    # Create an instance of request handler,
-    # aiogram has few implementations for different cases of usage
-    # In this example we use SimpleRequestHandler which is designed to handle simple cases
     webhook_requests_handler = SimpleRequestHandler(dispatcher=dp, bot=bot)
-    # Register webhook handler on application
     webhook_requests_handler.register(app, path="/webhook")
 
-    # Mount dispatcher startup and shutdown hooks to aiohttp application
     setup_application(app, dp, bot=bot)
 
-    # And finally start webserver
-    #await dp.start_polling(bot)
     await web._run_app(app, host="0.0.0.0", port=80)
 
 

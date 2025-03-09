@@ -20,7 +20,7 @@ url = URL.create(
     password = "NZmtvFxRc4C2"
 )
 
-engine = create_async_engine(url)
+engine = create_async_engine("sqlite+aiosqlite:///db.db")
 
 session = sessionmaker(
     engine, class_ = AsyncSession, expire_on_commit=False
